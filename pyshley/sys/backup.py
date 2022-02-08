@@ -62,3 +62,27 @@ def assetBackup() -> str:
     str: Absolute path to the tarball.
     """
     pass
+
+def worldBackup() -> str:
+    """
+    Performs a partial backup of world data.
+
+    Deposits Asset data into a .tar.gz within the default backup directory.
+    Naming scheme follows: YYMMDD-world.tar.gz
+
+    Returns:
+    str: Absolute path to the tarball.
+    """
+    pass
+
+def moduleBackup() -> str:
+    """
+    Performs a partial backup of module data.
+
+    Deposits Asset data into a .tar.gz within the default backup directory.
+    Naming scheme follows: YYMMDD-module.tar.gz
+
+    Returns:
+    str: Absolute path to the tarball.
+    """
+    pass
