@@ -1,14 +1,24 @@
-import hikari
-from pyshley.lib.config import discordSettings
+import lightbulb
+from pyshley.lib.log import logger
+from pyshley.lib.config import discordSettings, gmIDList
 
-bot = hikari.GatewayBot(token=discordSettings['token'])
+bot = lightbulb.BotApp(token=discordSettings['token'], prefix=discordSettings['prefix'])
 
 
-@bot.listen()
-async def ping(event: hikari.GuildMessageCreateEvent) -> None:
-    if event.is_bot or not event.content:
+@lightbulb.Check
+def authorIsGM(ctx: lightbulb.Context) -> bool:
+    if str(ctx.author.id) in gmIDList:
+        return True
+
+    logger.info(f"Unauthorized user {ctx.author.id} attempted command {ctx.command}")
+    return False
+
+
+@bot.command
+@lightbulb.command("ping", "Checks if Ashley is clocked in.")
+@lightbulb.implements(lightbulb.PrefixCommand)
+async def ping(ctx: lightbulb.Context) -> None:
+    if ctx.user.is_bot:
         return
 
-    if event.content.startswith("ping"):
-        await event.message.respond("Pong!")
-
+    await ctx.respond("I'm awake!")
