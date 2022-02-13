@@ -1,4 +1,5 @@
-import subprocess
+import os
+from _datetime import datetime
 
 
 # TODO: delete hint
@@ -12,6 +13,7 @@ def dockerStop(containers: list) -> None:
     Parameters:
     arg1 (list): List of container names.
     """
+
     pass
 
 
@@ -21,6 +23,19 @@ def dockerStart(containers: list) -> None:
 
     Parameters:
     arg1 (list): List of container names.
+    """
+    pass
+
+
+def makeTarBall(filePaths: list) -> str:
+    """"
+    Creates a tarball including all the files listed in filePaths
+
+    Parameters:
+    arg1 (list): List of all the folders needing to be packed into a tarball
+
+    Returns:
+    str: Absolute path to the tarball
     """
     pass
 
@@ -63,6 +78,7 @@ def assetBackup() -> str:
     """
     pass
 
+
 def worldBackup() -> str:
     """
     Performs a partial backup of world data.
@@ -74,6 +90,7 @@ def worldBackup() -> str:
     str: Absolute path to the tarball.
     """
     pass
+
 
 def moduleBackup() -> str:
     """
