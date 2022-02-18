@@ -1,8 +1,9 @@
+import hikari
 import lightbulb
 from pyshley.lib.log import logger
 from pyshley.lib.config import token, prefix, adminIDList, gmIDList, botChannelList
 
-bot = lightbulb.BotApp(token=token, prefix=prefix)
+bot = lightbulb.BotApp(token=token, prefix=prefix, intents=hikari.Intents.ALL)
 
 
 @lightbulb.Check
