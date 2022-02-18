@@ -51,20 +51,3 @@ async def createActor(ctx: lightbulb.Context) -> None:
     arg1 (Context): The Context that invoked the command.
     """
     pass
-
-
-@bot.command
-@lightbulb.add_checks(lightbulb.Check(isValidGM))
-@lightbulb.command("distributeXP", "Distributes XP to a list of characters.")
-@lightbulb.implements(lightbulb.PrefixCommand)
-async def distributeXP(ctx: lightbulb.Context) -> None:
-    """
-    Distributes XP to a list of characters.
-
-    Distributes a set amount of XP to each user mentioned in the invoked command.  Users with multiple Characters
-    are prompted in DMs to choose which of their characters should be granted the XP.
-
-    Parameters:
-    arg1 (Context): The Context that invoked the command.
-    """
-    pass
