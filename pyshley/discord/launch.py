@@ -61,10 +61,17 @@ def isBotChannel(ctx: lightbulb.Context) -> bool:
 
 
 @bot.command
+@lightbulb.add_checks(lightbulb.Check(lightbulb.Check(lightbulb.checks.human_only)))
 @lightbulb.command("ping", "Checks if Ashley is clocked in.")
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def ping(ctx: lightbulb.Context) -> None:
-    if ctx.user.is_bot:
-        return
-
     await ctx.respond("I'm awake!")
+
+
+@bot.command
+@lightbulb.add_checks(isValidAdmin)
+@lightbulb.command("announce", "Sends a message through Ashley.")
+@lightbulb.implements(lightbulb.PrefixCommand)
+async def announce(ctx: lightbulb.Context) -> None:
+    await ctx.respond(ctx.event.message.content[10:])
+    await ctx.event.message.delete()
