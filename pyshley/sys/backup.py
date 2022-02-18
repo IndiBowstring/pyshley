@@ -27,7 +27,7 @@ def dockerStart(containers: list) -> None:
     pass
 
 
-def makeTarBall(filePaths: list) -> str:
+def makeTarBall(filePaths: list, type: str) -> str:
     """"
     Creates a tarball including all the files listed in filePaths
 
@@ -37,6 +37,9 @@ def makeTarBall(filePaths: list) -> str:
     Returns:
     str: Absolute path to the tarball
     """
+    year = datetime.now()
+
+
     pass
 
 
@@ -50,7 +53,16 @@ def fullBackup() -> str:
     Returns:
     str: Absolute path to the tarball.
     """
-    pass
+
+    # Run the individual backups
+    playerBackupLocation = playerBackup()
+    assetBackupLocation = assetBackup()
+    worldBackupLocation = worldBackup()
+    moduleBackupLocation = moduleBackup()
+    backupList = [playerBackupLocation, assetBackupLocation, worldBackupLocation, moduleBackupLocation]
+
+    # Run makeTarBall() and return the absolute path of where the tarball is
+    return makeTarBall(backupList, 'full')
 
 
 def playerBackup() -> str:
