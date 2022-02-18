@@ -1,7 +1,8 @@
 import hikari
 import lightbulb
-from pyshley.lib.log import logger
+
 from pyshley.lib.config import token, prefix, adminIDList, gmIDList, botChannelList
+from pyshley.lib.log import logger
 
 bot = lightbulb.BotApp(token=token, prefix=prefix, intents=hikari.Intents.ALL)
 
@@ -20,7 +21,8 @@ def isValidGM(ctx: lightbulb.Context) -> bool:
         logger.info(f"Unauthorized user {ctx.author.id} attempted command {ctx.command}")
 
     if not str(ctx.channel_id) in botChannelList:
-        logger.info(f"Authorized user {ctx.author.id} attempted command {ctx.command} in non gm channel {ctx.channel_id}")
+        logger.info(
+            f"Authorized user {ctx.author.id} attempted command {ctx.command} in non gm channel {ctx.channel_id}")
 
     else:
         return True
