@@ -4,7 +4,12 @@ import lightbulb
 from pyshley.lib.config import token, prefix, adminIDList, gmIDList, botChannelList
 from pyshley.lib.log import logger
 
-bot = lightbulb.BotApp(token=token, prefix=prefix, intents=hikari.Intents.ALL)
+bot = lightbulb.BotApp(
+    token=token,
+    prefix=prefix,
+    intents=hikari.Intents.ALL,
+    default_enabled_guilds=(671825516310822959,),
+    help_slash_command=True)
 
 
 @lightbulb.Check
