@@ -1,6 +1,0 @@
-{
-  "dockerContainers": {
-    "container_name": "prod|dev"
-  },
-  "dataDirectory": "path/to/data"
-}
