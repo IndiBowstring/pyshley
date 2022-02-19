@@ -1,4 +1,5 @@
-import subprocess
+import os
+from _datetime import datetime
 
 
 # TODO: delete hint
@@ -12,6 +13,7 @@ def dockerStop(containers: list) -> None:
     Parameters:
     arg1 (list): List of container names.
     """
+
     pass
 
 
@@ -25,6 +27,22 @@ def dockerStart(containers: list) -> None:
     pass
 
 
+def makeTarBall(filePaths: list, type: str) -> str:
+    """"
+    Creates a tarball including all the files listed in filePaths
+
+    Parameters:
+    arg1 (list): List of all the folders needing to be packed into a tarball
+
+    Returns:
+    str: Absolute path to the tarball
+    """
+    year = datetime.now()
+
+
+    pass
+
+
 def fullBackup() -> str:
     """
     Performs a full backup of foundry data.
@@ -35,7 +53,16 @@ def fullBackup() -> str:
     Returns:
     str: Absolute path to the tarball.
     """
-    pass
+
+    # Run the individual backups
+    playerBackupLocation = playerBackup()
+    assetBackupLocation = assetBackup()
+    worldBackupLocation = worldBackup()
+    moduleBackupLocation = moduleBackup()
+    backupList = [playerBackupLocation, assetBackupLocation, worldBackupLocation, moduleBackupLocation]
+
+    # Run makeTarBall() and return the absolute path of where the tarball is
+    return makeTarBall(backupList, 'full')
 
 
 def playerBackup() -> str:
@@ -63,6 +90,7 @@ def assetBackup() -> str:
     """
     pass
 
+
 def worldBackup() -> str:
     """
     Performs a partial backup of world data.
@@ -74,6 +102,7 @@ def worldBackup() -> str:
     str: Absolute path to the tarball.
     """
     pass
+
 
 def moduleBackup() -> str:
     """
