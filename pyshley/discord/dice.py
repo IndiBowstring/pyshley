@@ -8,6 +8,8 @@ import lightbulb
 from pyshley.discord.launch import isBotChannel
 from pyshley.lib.utils import clampIfExists
 
+REROLL_MAX = 5000
+
 DicePlugin = lightbulb.Plugin("DicePlugin")
 
 
@@ -50,14 +52,14 @@ def tokenize(query: typing.Optional[str]) -> tuple:
         out = re.search(r"^(\d+)?d(\d+)?(kH|kL|ro|ra|!)?([<|>])?(\d+)?([+|-]?\d+)?$", query, re.IGNORECASE)
         if out:
             return (
-                clampIfExists(out.groups()[0], 1, 50, 1),
-                clampIfExists(out.groups()[1], 1, 100, 20),
+                clampIfExists(out.groups()[0], 1, 127, 1),  # Completely arbitrary limits but number cute uwu~
+                clampIfExists(out.groups()[1], 1, 32767, 20),
                 out.groups()[2].lower() if out.groups()[2] else None,
                 (
                     out.groups()[3],
-                    clampIfExists(out.groups()[4], 0, 50, 0)
+                    clampIfExists(out.groups()[4], 0, 32767, 0)
                 ),
-                clampIfExists(out.groups()[5], 0, 1000, 0),
+                clampIfExists(out.groups()[5], 0, 32767, 0),
             )
     return 1, 20, None, (None, 0), 0  # Roll default of 1d20
 
@@ -75,21 +77,20 @@ def processRolls(token: tuple) -> RollPayload:
     for idx in range(0, token[0]):
         initialRolls.append(random.randint(1, token[1]))
 
+    _initialRolls = initialRolls.copy()  # Preserve order of initial rolls
     processedRolls = []
+
     if token[2] == "kh":
-        _initialRolls = initialRolls.copy()  # Preserve order of initial rolls
         _initialRolls.sort()
         processedRolls = list(islice(reversed(_initialRolls), 0, token[3][1]))
 
     elif token[2] == "kl":
-        _initialRolls = initialRolls.copy()  # Preserve order of initial rolls
         _initialRolls.sort()
         processedRolls = list(islice(_initialRolls, 0, token[3][1]))
 
     elif token[2] == "ro":
-        _initialRolls = initialRolls.copy()  # Preserve order of initial rolls
         if not token[3][1]:
-            pass  # TODO: Throw error
+            pass  # TODO: Throw InvalidInputError
         else:
             for r in _initialRolls:
                 if token[3][0] == ">" and r > token[3][1]:
@@ -100,26 +101,36 @@ def processRolls(token: tuple) -> RollPayload:
                     processedRolls.append(r)
 
     elif token[2] == "ra":
-        # TODO: Rewrite
-        pass
-        """
-        _isDirty = True
-        _initialRolls = initialRolls.copy()  # Preserve order of initial rolls
         if not token[3][1]:
-            pass  # TODO: Throw error
+            pass  # TODO: Throw InvalidInputError
         else:
-            while _isDirty:
-                _isDirty = False
-                for idx, r in enumerate(_initialRolls):
-                    if (token[3][0] == ">" and r > token[3][1]) or (r < token[3][1]):
-                        _isDirty = True
-                        _roll = random.randint(1, token[1])
-                        processedRolls.append(_roll)
-                        _initialRolls[idx] = _roll
-                    else:
-                        processedRolls.append(r)
-                # TODO: Could be more efficient if we don't loop over all values every time one doesn't match.
-        """
+            for r in _initialRolls:
+                if token[3][0] == ">" and r > token[3][1]:
+                    _reroll = r
+                    for idx in range(0, REROLL_MAX):
+                        _reroll = random.randint(1, token[1])
+                        if not _reroll > token[3][1]:
+                            break
+
+                        if idx == REROLL_MAX-1:
+                            pass  # TODO: Throw MaxIterationsReached
+
+                    processedRolls.append(_reroll)
+
+                elif r < token[3][1]:
+                    _reroll = r
+                    for idx in range(0, REROLL_MAX):
+                        _reroll = random.randint(1, token[1])
+                        if not _reroll < token[3][1]:
+                            break
+
+                        if idx == REROLL_MAX-1:
+                            pass  # TODO: Throw MaxValueReachedError
+
+                    processedRolls.append(_reroll)
+                else:
+                    processedRolls.append(r)
+
     elif token[2] == "!":
         # TODO: Exploding/Penetrating Dice
         pass
